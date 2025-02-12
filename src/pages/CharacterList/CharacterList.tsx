@@ -4,15 +4,34 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Layout from '../../components/Layout';
 import useMarvelAPI from '../../hooks/useMarvelApi';
+
 const CharacterList: React.FC = () => {
-  const { data, loading, error } = useMarvelAPI('characters');
+  const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
+  const itemsPerPage = 20;
+  const offset = (currentPage - 1) * itemsPerPage;
+
+  const { data, loading, error, total } = useMarvelAPI('characters', offset, itemsPerPage);
 
   const characters = Array.isArray(data) ? data : [];
 
   const filteredCharacters = characters.filter((character: any) =>
     character.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const totalPages = Math.ceil(total / itemsPerPage);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
 
   if (loading) return <p className="text-center text-lg font-semibold">Carregando seus personagens favoritos...</p>;
   if (error) return <p className="text-center text-red-500">Erro: {error}</p>;
@@ -40,6 +59,26 @@ const CharacterList: React.FC = () => {
             <p>Nenhum personagem encontrado.</p>
           </div>
         )}
+      </div>
+
+      <div className="flex justify-center items-center mt-8 space-x-4">
+        <button
+          onClick={handlePrevPage}
+          disabled={currentPage === 1}
+          className="px-4 py-2 bg-red-500 text-white rounded disabled:bg-gray-300"
+        >
+          Anterior
+        </button>
+        <span className="text-lg font-semibold">
+          Página {currentPage} de {totalPages}
+        </span>
+        <button
+          onClick={handleNextPage}
+          disabled={currentPage === totalPages}
+          className="px-4 py-2 bg-red-500 text-white rounded disabled:bg-gray-300"
+        >
+          Próxima
+        </button>
       </div>
     </Layout>
   );

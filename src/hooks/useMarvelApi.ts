@@ -7,15 +7,16 @@ const privateKey = 'ffd3b4eee1ef1b448fdf33de245ba29cdd5e3318';
 const ts = new Date().getTime();
 const hash = md5(ts + privateKey + publicKey);
 
-const useMarvelAPI = (endpoint: string) => {
+const useMarvelAPI = (endpoint: string, offset: number = 0, limit: number = 20) => {
     const [data, setData] = useState<any>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
+    const [total, setTotal] = useState<number>(0);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const url = `https://gateway.marvel.com/v1/public/${endpoint}?ts=${ts}&apikey=${publicKey}&hash=${hash}`;
+                const url = `https://gateway.marvel.com/v1/public/${endpoint}?ts=${ts}&apikey=${publicKey}&hash=${hash}&offset=${offset}&limit=${limit}`;
                 console.log('Fetching URL:', url);
 
                 const response = await fetch(url);
@@ -29,6 +30,7 @@ const useMarvelAPI = (endpoint: string) => {
 
                 if (result.code === 200) {
                     setData(result.data.results);
+                    setTotal(result.data.total);
                 } else {
                     throw new Error(result.message || 'Unknown error occurred');
                 }
@@ -45,9 +47,9 @@ const useMarvelAPI = (endpoint: string) => {
         };
 
         fetchData();
-    }, [endpoint]);
+    }, [endpoint, offset, limit]);
 
-    return { data, loading, error };
+    return { data, loading, error, total };
 };
 
 export default useMarvelAPI;

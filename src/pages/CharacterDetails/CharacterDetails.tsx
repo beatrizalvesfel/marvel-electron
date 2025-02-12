@@ -29,6 +29,7 @@ const CharacterDetails = () => {
           src={`${character.thumbnail.path}.${character.thumbnail.extension}`}
           alt={character.name}
           className="w-full h-96 object-cover"
+          aria-labelledby="character-name"
         />
         <div className="p-6 text-center">
           <h1 className="text-3xl font-bold text-gray-900">{character.name}</h1>
