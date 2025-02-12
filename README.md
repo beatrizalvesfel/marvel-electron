@@ -14,3 +14,5 @@ Este projeto é um app frontend desenvolvido com **React.js** e **Electron** par
    ```sh
    git clone https://github.com/beatrizalvesfel/marvel-electron.git
    cd marvel-electron
+   npm install
+   npm run start
