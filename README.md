@@ -7,6 +7,7 @@ Este projeto é um app frontend desenvolvido com **React.js** e **Electron** par
 - **Electron** (Aplicação Desktop)
 - **React Router** (Roteamento)
 - **Tailwind CSS** (Estilização)
+- **Context API** (Tema Dark/Light)
 - **Marvel API** (Dados)
 
 ## 📦 Instalação
